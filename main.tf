@@ -1,30 +1,11 @@
-#### SETUP GOOGLE ####
-terraform {
-  required_providers {
-    google = {
-      source = "hashicorp/google"
-    }
-  }
-}
-
-# Configura o Provider Google Cloud com o Projeto
-provider "google" {
-  version = "3.5.0"
-
-  project = "ricardodias-cloudautomation" 
-  region  = "us-central1"
-  zone    = "us-central1-c"
-}
-
-
 #### RECURSOS NO GCP #####
 
 # Cria uma VM no Google Cloud
 resource "google_compute_instance" "firstvm" {
   name         = "website"
   machine_type = "n1-standard-1"
-  zone         = "us-central1-c"
-  tags         = ["website"]
+  zone         = var.gcp_zone
+  tags         = ["website", "impacta"]
 
   # Defini a Imagem da VM
   boot_disk {
@@ -41,9 +22,4 @@ resource "google_compute_instance" "firstvm" {
     }
     // A presença do bloco access_config, mesmo sem argumentos, garante que a instância estará acessível pela internet.
   }
-}
-
-# Retorna o IP da VM criada
-output "ip" {
-  value = google_compute_instance.firstvm.network_interface.0.access_config.0.nat_ip
 }
